@@ -10,6 +10,10 @@ import { CounterOutputComponent } from './counter/counter-output/counter-output.
 import { CounterInputComponent } from './counter/counter-input/counter-input.component';
 import { counterReducer } from './counter/state/counter.reducer';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppRoutingModule } from './app-routing-module';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { HomeComponent } from './home/home.component';
+import { PostsListComponent } from './posts/posts-list/posts-list.component';
 
 @NgModule({
   declarations: [
@@ -17,9 +21,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CounterComponent,
     CounterButtonComponent,
     CounterOutputComponent,
-    CounterInputComponent
+    CounterInputComponent,
+    HeaderComponent,
+    HomeComponent,
+    PostsListComponent
   ],
   imports: [
+    AppRoutingModule,
     FormsModule,
     BrowserModule,
     StoreModule.forRoot({ counter: counterReducer }),

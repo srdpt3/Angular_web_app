@@ -24,4 +24,5 @@ export class CounterButtonComponent implements OnInit {
     this.store.dispatch(reset());
   }
 
+
 }
