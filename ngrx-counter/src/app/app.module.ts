@@ -14,6 +14,10 @@ import { AppRoutingModule } from './app-routing-module';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { HomeComponent } from './home/home.component';
 import { PostsListComponent } from './posts/posts-list/posts-list.component';
+import { environment } from 'src/environments/environment';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { postsReducer } from './posts/state/posts.reducers';
+import { appReducer } from './store/app.state';
 
 @NgModule({
   declarations: [
@@ -28,10 +32,14 @@ import { PostsListComponent } from './posts/posts-list/posts-list.component';
   ],
   imports: [
     AppRoutingModule,
+    NgbModule,
     FormsModule,
     BrowserModule,
-    StoreModule.forRoot({ counter: counterReducer }),
-    NgbModule
+    StoreModule.forRoot(appReducer),
+    StoreDevtoolsModule.instrument({
+      logOnly: environment.production, // Restrict extension to log-only mode
+      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
