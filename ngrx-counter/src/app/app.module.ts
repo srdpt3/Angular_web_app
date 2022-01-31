@@ -1,4 +1,4 @@
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { postsReducer } from './posts/state/posts.reducers';
 import { appReducer } from './store/app.state';
+import { AddPostComponent } from './posts/add-post/add-post.component';
 
 @NgModule({
   declarations: [
@@ -28,11 +29,13 @@ import { appReducer } from './store/app.state';
     CounterInputComponent,
     HeaderComponent,
     HomeComponent,
-    PostsListComponent
+    PostsListComponent,
+    AddPostComponent
   ],
   imports: [
     AppRoutingModule,
     NgbModule,
+    ReactiveFormsModule,
     FormsModule,
     BrowserModule,
     StoreModule.forRoot(appReducer),
