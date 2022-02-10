@@ -1,3 +1,4 @@
+import { EditPostComponent } from './posts/edit-post/edit-post.component';
 import { AddPostComponent } from './posts/add-post/add-post.component';
 import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -19,7 +20,9 @@ const routes: Routes = [
         path: 'posts',
         component: PostsListComponent,
         children: [
-            { path: 'add', component: AddPostComponent }
+            { path: 'add', component: AddPostComponent },
+            { path: 'edit/:id', component: EditPostComponent }
+
         ],
     },
     // {
@@ -34,8 +37,8 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // },
     // {
-    //   path: 'posts/details/:id',
-    //   component: SinglePostComponent,
+    //     path: 'posts/details/:id',
+    //     component: EditPostComponent,
     // },
     // {
     //   path: 'auth',

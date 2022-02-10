@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/app.state';
 import { Post } from '../models/posts.model';
+import { addPost } from '../state/posts.actions';
 
 @Component({
   selector: 'app-add-post',
@@ -56,7 +57,7 @@ export class AddPostComponent implements OnInit {
       description: this.postForm.value.description,
     };
 
-    this.store.dispatch(addPost({ post }));
+    // this.store.dispatch(addPost({ post }));
 
   }
 }
