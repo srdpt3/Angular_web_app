@@ -12,6 +12,7 @@ export const LOAD_POSTS = '[posts page] load posts';
 export const LOAD_POSTS_SUCCESS = '[posts page] load posts success';
 
 export const addPost = createAction(ADD_POST_ACTION, props<{ post: Post }>());
+export const updatePost = createAction(UPDATE_POST_ACTION, props<{ post: Post }>());
 
 
 export const addPostSuccess = createAction(

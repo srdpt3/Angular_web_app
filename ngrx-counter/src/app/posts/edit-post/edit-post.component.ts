@@ -1,6 +1,7 @@
+import { updatePost } from './../state/posts.actions';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/app.state';
 import { Post } from '../models/posts.model';
@@ -17,7 +18,7 @@ export class EditPostComponent implements OnInit, OnDestroy {
   postForm!: FormGroup;
 
   postSubscription: Subscription | undefined;
-  constructor(private route: ActivatedRoute, private store: Store<AppState>) { }
+  constructor(private route: ActivatedRoute, private store: Store<AppState>, private router: Router) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -41,6 +42,29 @@ export class EditPostComponent implements OnInit, OnDestroy {
     })
 
   }
+
+  onSubmit() {
+    if (!this.postForm.valid) {
+      return
+    }
+
+    const title = this.postForm.value.title;
+    const description = this.postForm.value.description;
+
+    const post: Post = {
+      id: this.post?.id,
+      title,
+      description,
+
+    };
+    //dispatch the action
+
+    this.store.dispatch(updatePost({ post }));
+    this.router.navigate(['posts'])
+
+
+  }
+
 
   ngOnDestroy() {
     if (this.postSubscription) {
