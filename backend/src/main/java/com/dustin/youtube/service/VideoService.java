@@ -2,6 +2,8 @@ package com.dustin.youtube.service;
 
 
 import com.dustin.youtube.dto.UploadVideoResponse;
+import com.dustin.youtube.dto.VideoDto;
+import com.dustin.youtube.exception.YoutubeCloneException;
 import com.dustin.youtube.model.Video;
 import com.dustin.youtube.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,35 @@ public class VideoService {
 //        video.setUserId(userId);
         videoRepository.save(video);
         return new UploadVideoResponse(video.getId(), url);
+    }
+
+    public String uploadThumbnail(MultipartFile multipartFile, String videoId) {
+        var video = getVideoById(videoId);
+        String url = s3Service.upload(multipartFile);
+        video.setThumbnailUrl(url);
+        videoRepository.save(video);
+        return url;
+    }
+
+
+    public VideoDto editVideoMetadata(VideoDto videoMetaDataDto) {
+        // find the video by video ID
+        var video = getVideoById(videoMetaDataDto.getVideoId());
+        video.setTitle(videoMetaDataDto.getVideoName());
+        video.setDescription(videoMetaDataDto.getDescription());
+        video.setUrl(videoMetaDataDto.getUrl());
+        // Ignore Channel ID as it should not be possible to change the Channel of a Video
+        video.setTags(videoMetaDataDto.getTags());
+        video.setVideoStatus(videoMetaDataDto.getVideoStatus());
+        // View Count is also ignored as its calculated independently
+        videoRepository.save(video);
+        return videoMetaDataDto;
+//        return videoMapper.map ToDto(video);
+    }
+
+    private Video getVideoById(String id) {
+        return videoRepository.findById(id)
+                .orElseThrow(() -> new YoutubeCloneException("Cannot find Video with ID - " + id));
     }
 
 

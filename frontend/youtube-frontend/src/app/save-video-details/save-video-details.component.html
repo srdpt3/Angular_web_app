@@ -1,0 +1,35 @@
+<div class="save-video-detail" fxLayout="row wrap" fxLayoutAlign="center">
+  <div fxFlex="20%"></div>
+  <div fxFlex="30%">
+    <div class="mat-title">Add Video Metadata</div>
+    <form>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input matInput placeholder="" [formControl]="title" required>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <input matInput placeholder="" [formControl]="description" required>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Video Status</mat-label>
+          <mat-select [formControl]="videoStatus">
+            <mat-option value="PUBLIC">PUBLIC</mat-option>
+            <mat-option value="PRIVATE">PRIVATE</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <hr>
+      <button type="submit" mat-raised-button color="primary" (click)="saveVideo()">Save</button>
+    </form>
+  </div>
+  <div fxFlex="30%">
+
+  </div>
+  <div fxFlex="20%"></div>
+</div>
