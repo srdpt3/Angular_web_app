@@ -37,7 +37,6 @@ public class VideoService {
 
 
     public VideoDto editVideoMetadata(VideoDto videoMetaDataDto) {
-        // find the video by video ID
         var video = getVideoById(videoMetaDataDto.getVideoId());
         video.setTitle(videoMetaDataDto.getVideoName());
         video.setDescription(videoMetaDataDto.getDescription());
@@ -57,4 +56,17 @@ public class VideoService {
     }
 
 
+    public VideoDto getVideoDetails(String videoId) {
+        Video savedVideo = getVideoById(videoId);
+        VideoDto videoDto = new VideoDto();
+        videoDto.setThumbnailUrl(savedVideo.getThumbnailUrl());
+//        videoDto.setId(savedVideo.getId());
+        videoDto.setUrl(savedVideo.getUrl());
+        videoDto.setVideoId(savedVideo.getId());
+        videoDto.setDescription(savedVideo.getDescription());
+        videoDto.setVideoStatus(savedVideo.getVideoStatus());
+        videoDto.setTags(savedVideo.getTags());
+        videoDto.setVideoName(savedVideo.getTitle());
+        return videoDto;
+    }
 }
