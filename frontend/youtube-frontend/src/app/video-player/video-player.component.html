@@ -24,7 +24,8 @@
   </vg-controls>
 
   <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto">
-<!--    <source src="https://youtube-dustin-clone.s3.amazonaws.com/72e19399-1ef3-4f7b-9975-f2bad833b3bc.MOV" type="video/MOV">-->
+    <h1>{{videoUrl}}</h1>
+<!--    <source src="https://youtube-dustin-clone.s3.amazonaws.com/9d177286-5f0a-4897-a646-0231a69fe09a.mp4" type="video/mp4">-->
     <source src={{videoUrl}} type="video/mp4">
   </video>
 </vg-player>

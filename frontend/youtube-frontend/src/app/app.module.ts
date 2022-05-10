@@ -7,7 +7,7 @@ import {UploadVideoComponent} from './upload-video/upload-video.component';
 import {SaveVideoDetailsComponent} from './save-video-details/save-video-details.component';
 import {HeaderComponent} from './header/header.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
@@ -29,8 +29,10 @@ import {VgCoreModule} from "@videogular/ngx-videogular/core";
 import {VgBufferingModule} from "@videogular/ngx-videogular/buffering";
 import {VgControlsModule} from "@videogular/ngx-videogular/controls";
 import {VgOverlayPlayModule} from "@videogular/ngx-videogular/overlay-play";
-import { VideoPlayerComponent } from './video-player/video-player.component';
-import { AuthConfigModule } from './auth/auth-config.module';
+import {VideoPlayerComponent} from './video-player/video-player.component';
+import {AuthConfigModule} from './auth/auth-config.module';
+import {AuthInterceptor, AuthModule} from "angular-auth-oidc-client";
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -44,31 +46,33 @@ import { AuthConfigModule } from './auth/auth-config.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatListModule,
-    MatSidenavModule,
-    MatFormFieldModule,
-    MatInputModule,
     FormsModule,
     HttpClientModule,
     NgxFileDropModule,
-    MatStepperModule,
-    ReactiveFormsModule,
-    MatOptionModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
     MatSelectModule,
-    MatFileUploadModule,
-    MatSnackBarModule,
-    MatCardModule,
+    MatOptionModule,
+    MatInputModule,
+    ReactiveFormsModule,
     MatChipsModule,
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
     VgBufferingModule,
-    AuthConfigModule
+    MatSnackBarModule,
+    AuthConfigModule,
+    MatSidenavModule,
+    MatListModule,
+    MatCardModule,
+    MatMenuModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
