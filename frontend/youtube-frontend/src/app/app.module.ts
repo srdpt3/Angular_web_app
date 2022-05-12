@@ -33,6 +33,7 @@ import {VideoPlayerComponent} from './video-player/video-player.component';
 import {AuthConfigModule} from './auth/auth-config.module';
 import {AuthInterceptor, AuthModule} from "angular-auth-oidc-client";
 import {MatMenuModule} from "@angular/material/menu";
+import { VideoDetailComponent } from './video-detail/video-detail.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {MatMenuModule} from "@angular/material/menu";
     SaveVideoDetailsComponent,
     HeaderComponent,
     VideoPlayerComponent,
+    VideoDetailComponent,
   ],
   imports: [
     BrowserModule,
