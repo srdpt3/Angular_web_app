@@ -69,4 +69,12 @@ public class VideoService {
         videoDto.setVideoName(savedVideo.getTitle());
         return videoDto;
     }
+
+
+    public VideoDto likeVideo(String videoId){
+        Video videoById = getVideoById(videoId);
+
+        return null;
+    }
+
 }

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -53,6 +55,15 @@ public class UserService {
             throw new RuntimeException("Exception occurred while registering user");
         }
         //
+
+
+    }
+
+    public User getCurrentUser(){
+
+        String sub =
+                ((Jwt)(SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getClaim("sub");
+        userRepository.findBySub(sub);
 
 
     }
