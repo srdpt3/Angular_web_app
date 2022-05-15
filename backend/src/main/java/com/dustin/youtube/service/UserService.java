@@ -2,6 +2,7 @@ package com.dustin.youtube.service;
 
 import com.dustin.youtube.dto.UserInfoDto;
 import com.dustin.youtube.model.User;
+import com.dustin.youtube.model.Video;
 import com.dustin.youtube.repository.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,14 +60,52 @@ public class UserService {
 
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
 
         String sub =
-                ((Jwt)(SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getClaim("sub");
-        userRepository.findBySub(sub);
-
+                ((Jwt) (SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getClaim("sub");
+        return userRepository.findBySub(sub)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find an user for sub " + sub));
 
     }
 
+    public void addToLikedVideos(String videoById) {
 
+        User currentUser = getCurrentUser();
+        currentUser.addToLikedVideos(videoById);
+        userRepository.save(currentUser);
+    }
+
+    public boolean ifLikedVideo(String videoId) {
+        return getCurrentUser().getLikedVideos().stream().anyMatch(likedVideo -> likedVideo.equals(videoId));
+    }
+    public boolean ifDisLikedVideo(String videoId) {
+        return getCurrentUser().getLikedVideos().stream().anyMatch(disLikedVideo -> disLikedVideo.equals(videoId));
+    }
+
+    public void removedFromLikedVidoes(String videoId) {
+        User currentUser = getCurrentUser();
+        currentUser.removeFromLikedVideos(videoId);
+        userRepository.save(currentUser);
+
+    }
+
+    public void removedFromDisLikedVidoes(String videoId) {
+        User currentUser = getCurrentUser();
+        currentUser.removeFromDisLikedVideo(videoId);
+        userRepository.save(currentUser);
+    }
+
+    public void addToDisLikedVideos(String videoId) {
+
+        User currentUser = getCurrentUser();
+        currentUser.addToDisLikedVideo(videoId);
+        userRepository.save(currentUser);
+    }
+
+    public void addVideoToHistory(String videoId) {
+        User currentUser = getCurrentUser();
+        currentUser.addToVideoHistory(videoId);
+        userRepository.save(currentUser);
+    }
 }

@@ -16,6 +16,7 @@ public class VideoService {
 
     private final S3Service s3Service;
     private final VideoRepository videoRepository;
+    private final UserService userService;
 
     public UploadVideoResponse uploadVideo(MultipartFile multipartFile) {
         String url = s3Service.upload(multipartFile);
@@ -36,17 +37,18 @@ public class VideoService {
     }
 
 
-    public VideoDto editVideoMetadata(VideoDto videoMetaDataDto) {
-        var video = getVideoById(videoMetaDataDto.getVideoId());
-        video.setTitle(videoMetaDataDto.getVideoName());
-        video.setDescription(videoMetaDataDto.getDescription());
-        video.setUrl(videoMetaDataDto.getUrl());
-        // Ignore Channel ID as it should not be possible to change the Channel of a Video
-        video.setTags(videoMetaDataDto.getTags());
-        video.setVideoStatus(videoMetaDataDto.getVideoStatus());
-        // View Count is also ignored as its calculated independently
-        videoRepository.save(video);
-        return videoMetaDataDto;
+    public VideoDto editVideoMetadata(VideoDto videoDto) {
+        var savedVideo = getVideoById(videoDto.getId());
+        // Map the videoDto fields to video
+        savedVideo.setTitle(videoDto.getTitle());
+        savedVideo.setDescription(videoDto.getDescription());
+        savedVideo.setTags(videoDto.getTags());
+        savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());
+        savedVideo.setVideoStatus(videoDto.getVideoStatus());
+
+        // save the video  to the database
+        videoRepository.save(savedVideo);
+        return videoDto;
 //        return videoMapper.map ToDto(video);
     }
 
@@ -58,23 +60,82 @@ public class VideoService {
 
     public VideoDto getVideoDetails(String videoId) {
         Video savedVideo = getVideoById(videoId);
-        VideoDto videoDto = new VideoDto();
-        videoDto.setThumbnailUrl(savedVideo.getThumbnailUrl());
-//        videoDto.setId(savedVideo.getId());
-        videoDto.setUrl(savedVideo.getUrl());
-        videoDto.setVideoId(savedVideo.getId());
-        videoDto.setDescription(savedVideo.getDescription());
-        videoDto.setVideoStatus(savedVideo.getVideoStatus());
-        videoDto.setTags(savedVideo.getTags());
-        videoDto.setVideoName(savedVideo.getTitle());
+
+        increaseVideoCount(savedVideo);
+        userService.addVideoToHistory(videoId);
+        VideoDto videoDto = mapToVideoDto(savedVideo);
+        return videoDto;
+    }
+
+    private void increaseVideoCount(Video savedVideo) {
+        savedVideo.increaseViewCount();
+        videoRepository.save(savedVideo);
+    }
+
+
+    public VideoDto likeVideo(String videoId) {
+        Video videoById = getVideoById(videoId);
+
+        if (userService.ifLikedVideo(videoId)) {
+            videoById.decreaseLikeCount();
+            userService.removedFromLikedVidoes(videoId);
+        } else if (userService.ifDisLikedVideo(videoId)) {
+
+            videoById.decreaseDisLikeCount();
+            userService.removedFromDisLikedVidoes(videoId);
+            videoById.increaseLikeCount();
+            userService.addToLikedVideos(videoId);
+        } else {
+            videoById.increaseLikeCount();
+            userService.addToLikedVideos(videoId);
+
+        }
+
+        videoRepository.save(videoById);
+        VideoDto videoDto = mapToVideoDto(videoById);
+
         return videoDto;
     }
 
 
-    public VideoDto likeVideo(String videoId){
+    public VideoDto disLikeVideo(String videoId) {
         Video videoById = getVideoById(videoId);
+        userService.removedFromDisLikedVidoes(videoId);
 
-        return null;
+        if (userService.ifDisLikedVideo(videoId)) {
+            videoById.decreaseDisLikeCount();
+            userService.removedFromDisLikedVidoes(videoId);
+        } else if (userService.ifLikedVideo(videoId)) {
+            videoById.decreaseLikeCount();
+            userService.removedFromLikedVidoes(videoId);
+            videoById.increaseDisLikeCount();
+            userService.addToDisLikedVideos(videoId);
+        } else {
+            videoById.increaseDisLikeCount();
+            userService.addToDisLikedVideos(videoId);
+        }
+
+        videoRepository.save(videoById);
+        VideoDto videoDto = mapToVideoDto(videoById);
+
+        return videoDto;
+
+
+
     }
 
+    private VideoDto mapToVideoDto(Video videoById) {
+        VideoDto videoDto = new VideoDto();
+        videoDto.setVideoUrl(videoById.getUrl());
+        videoDto.setThumbnailUrl(videoById.getThumbnailUrl());
+        videoDto.setId(videoById.getId());
+        videoDto.setDescription(videoById.getTitle());
+        videoDto.setDescription(videoById.getDescription());
+        videoDto.setTags(videoById.getTags());
+        videoDto.setVideoStatus(videoById.getVideoStatus());
+        videoDto.setLikeCount(videoById.getLikes().get());
+        videoDto.setDislikeCount(videoById.getDisLikes().get());
+        videoDto.setViewCount(videoById.getViewCount().get());
+        return videoDto;
+    }
 }
