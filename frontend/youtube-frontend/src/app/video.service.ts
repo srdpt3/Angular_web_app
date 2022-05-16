@@ -57,4 +57,8 @@ export class VideoService {
       })
   }
 
+  getAllVideos(): Observable<Array<VideoDto>> {
+    return this.httpClient.get<Array<VideoDto>>("http://localhost:8080/api/video/");
+  }
+
 }

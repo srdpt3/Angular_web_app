@@ -1,6 +1,7 @@
 package com.dustin.youtube.controller;
 
 
+import com.dustin.youtube.dto.CommentDto;
 import com.dustin.youtube.dto.UploadVideoResponse;
 import com.dustin.youtube.dto.VideoDto;
 import com.dustin.youtube.service.VideoService;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/video")
@@ -53,5 +56,24 @@ public class VideoController {
     public VideoDto disLikeVideo(@PathVariable String videoId) {
         return videoService.disLikeVideo(videoId);
     }
+
+    @PostMapping("/{videoId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public void addComment(@PathVariable String videoId, @RequestBody CommentDto commentDto) {
+        videoService.addComment(videoId, commentDto);
+    }
+
+    @GetMapping("/{videoId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CommentDto> getAllComments(@PathVariable String videoId) {
+        return videoService.getAllComments(videoId);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<VideoDto> getAllVideos() {
+        return videoService.getAllVideos();
+    }
+
 
 }

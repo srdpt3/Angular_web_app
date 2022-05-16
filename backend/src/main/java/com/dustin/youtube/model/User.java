@@ -46,11 +46,19 @@ public class User {
         videoHistory.add(videoId);
     }
 
-    public void addToSubscribedUsers(String userId) {
+    public void addToSubscribedToUsers(String userId) {
         subscribedToUsers.add(userId);
     }
 
     public void addToSubscribers(String userId) {
         subscribers.add(userId);
+    }
+
+    public void removeFromSubscribedToUsers(String userId) {
+        subscribedToUsers.remove(userId);
+    }
+
+    public void removeFromSubscribers(String userId) {
+        subscribers.remove(userId);
     }
 }

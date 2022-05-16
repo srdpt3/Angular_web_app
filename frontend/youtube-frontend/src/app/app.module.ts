@@ -34,6 +34,13 @@ import {AuthConfigModule} from './auth/auth-config.module';
 import {AuthInterceptor, AuthModule} from "angular-auth-oidc-client";
 import {MatMenuModule} from "@angular/material/menu";
 import { VideoDetailComponent } from './video-detail/video-detail.component';
+import { HomeComponent } from './home/home.component';
+import { HistoryComponent } from './history/history.component';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
+import { LikedVideosComponent } from './liked-videos/liked-videos.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { FeaturedComponent } from './featured/featured.component';
+import { VideoCardComponent } from './video-card/video-card.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +50,13 @@ import { VideoDetailComponent } from './video-detail/video-detail.component';
     HeaderComponent,
     VideoPlayerComponent,
     VideoDetailComponent,
+    HomeComponent,
+    HistoryComponent,
+    SubscriptionsComponent,
+    LikedVideosComponent,
+    SidebarComponent,
+    FeaturedComponent,
+    VideoCardComponent,
   ],
   imports: [
     BrowserModule,
