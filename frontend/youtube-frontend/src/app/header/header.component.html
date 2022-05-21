@@ -1,27 +1,23 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <span>Youtube by Dustin </span>
-    <span class-="example-spacer"></span>
-    <button mat-icon-button>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon"
+            routerLink="/upload-video"
+            aria-label="Example icon-button with heart icon">
       <mat-icon>video_call</mat-icon>
-
     </button>
-    <div *ngIf="isUserLoggedIn; else noAuth">
-      <!--      <a routerLink="/upload-video" mat-icon-button>-->
-      <!--      </a>-->
+    <button *ngIf="isAuthenticated; else noAuth"
+            [matMenuTriggerFor]="menu"
+            mat-icon-button class="example-icon"
+            aria-label="Example icon-button with share icon">
       <mat-icon>account_circle</mat-icon>
-
-    </div>
-
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logOff()">Logout</button>
+    </mat-menu>
     <ng-template #noAuth>
-
-      <button mat-raised-button (click)="login()">
-        Login
-      </button>
+      <button mat-raised-button (click)="login()">Login</button>
     </ng-template>
-
-    <!--    <a *ngIf="!isUserLoggedIn" (click)="login()" class="logo">Login</a>-->
-
   </mat-toolbar-row>
-
 </mat-toolbar>

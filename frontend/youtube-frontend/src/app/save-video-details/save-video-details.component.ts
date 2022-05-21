@@ -15,36 +15,30 @@ import {VideoDto} from "../video-dto";
 })
 export class SaveVideoDetailsComponent {
 
-  saveVideoForm: FormGroup;
+  saveVideoDetailsForm: FormGroup;
   title: FormControl = new FormControl('');
   description: FormControl = new FormControl('');
-  videoStatus: FormControl = new FormControl('')
+  videoStatus: FormControl = new FormControl('');
   selectable = true;
   removable = true;
   addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
   tags: string[] = [];
-  showVideoUrl = false;
-  videoUrlAvailable = false;
-  videoUrl!: string;
-  thumbnailUrl!: string;
-  videoId!: string;
   selectedFile!: File;
   selectedFileName = '';
-  uploadThumbnailSubscription!: Subscription;
-  fileUploaded!: boolean;
-  fileSelected!: boolean;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  videoId = '';
+  fileSelected = false;
+  videoUrl!: string;
+  thumbnailUrl!: string;
 
-
-  constructor(private videoService: VideoService, private route: ActivatedRoute,
+  constructor(private activatedRoute: ActivatedRoute, private videoService: VideoService,
               private matSnackBar: MatSnackBar) {
-    this.videoId = this.route.snapshot.params['videoId'];
+    this.videoId = this.activatedRoute.snapshot.params['videoId'];
     this.videoService.getVideo(this.videoId).subscribe(data => {
-      console.log("data.url"+  data.url)
-      this.videoUrl = data.url;
+      this.videoUrl = data.videoUrl;
       this.thumbnailUrl = data.thumbnailUrl;
     })
-    this.saveVideoForm = new FormGroup({
+    this.saveVideoDetailsForm = new FormGroup({
       title: this.title,
       description: this.description,
       videoStatus: this.videoStatus,
@@ -63,49 +57,46 @@ export class SaveVideoDetailsComponent {
     event.chipInput!.clear();
   }
 
-  remove(tag: string): void {
-    const index = this.tags.indexOf(tag);
+  remove(value: string): void {
+    const index = this.tags.indexOf(value);
 
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
   }
 
-  onFileSelected(event: any) {
+  onFileSelected(event: Event) {
+    // @ts-ignore
     this.selectedFile = event.target.files[0];
     this.selectedFileName = this.selectedFile.name;
-    this.fileSelected  = true
+    this.fileSelected = true;
   }
 
   onUpload() {
-    this.uploadThumbnailSubscription = this.videoService.uploadThumbnail(this.selectedFile, this.videoId)
-      .subscribe(data => {
-        console.log(data);
-        // this.thumbnailUploaded.subscribe(() => {
-        this.matSnackBar.open("Thumbnail Uploaded Successfully", "OK");
-        //   this.fileUploaded = true;
-        // });
-      });
+    this.videoService.uploadThumbnail(this.selectedFile, this.videoId)
+      .subscribe(() => {
+        // show an upload success notification.
+        this.matSnackBar.open("Thumbnail Upload Successful", "OK");
+      })
   }
 
   saveVideo() {
-    // const userId = this.authService.getUserId();
-    const videoMetData: VideoDto = {
-      "videoId": this.videoId,
-      "userId": 'Test', //FIXME: check why userId is blank
-      "videoName": this.saveVideoForm.get('title')?.value,
-      "description": this.saveVideoForm.get('description')?.value,
+    // Call the video service to make a http call to our backend
+    const videoMetaData: VideoDto = {
+      "id": this.videoId,
+      "title": this.saveVideoDetailsForm.get('title')?.value,
+      "description": this.saveVideoDetailsForm.get('description')?.value,
       "tags": this.tags,
-      "videoStatus": this.saveVideoForm.get('videoStatus')?.value,
-      "url": this.videoUrl,
+      "videoStatus": this.saveVideoDetailsForm.get('videoStatus')?.value,
+      "videoUrl": this.videoUrl,
       "thumbnailUrl": this.thumbnailUrl,
       "likeCount": 0,
-      "dislikeCount": 0
+      "dislikeCount": 0,
+      "viewCount": 0
     }
-
-    this.videoService.saveVideo(videoMetData).subscribe(data => {
-      this.showVideoUrl = true;
-      this.matSnackBar.open("Video Metadata Updated Successfully", "OK");
-    });
+    this.videoService.saveVideo(videoMetaData).subscribe(data => {
+      this.matSnackBar.open("Video Metadata Updated successfully", "OK");
+    })
   }
 }
+

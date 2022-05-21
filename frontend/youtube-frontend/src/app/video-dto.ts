@@ -1,12 +1,12 @@
 export interface VideoDto {
-  videoId: string;
-  userId: string;
-  videoName: string;
+  id: string;
+  title: string;
   description: string;
   tags: Array<string>;
+  videoUrl: string;
   videoStatus: string;
-  url: string;
   thumbnailUrl: string;
   likeCount: number;
   dislikeCount: number;
+  viewCount: number;
 }

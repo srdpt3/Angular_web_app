@@ -17,25 +17,24 @@ public class UserController {
     @GetMapping("/register")
     public String register(Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
-        userService.registerUser(jwt.getTokenValue());
-        return "User Registration Successfull";
+        return userService.registerUser(jwt.getTokenValue());
     }
 
-    @PostMapping("/subscribe/{userId}")
+    @PostMapping("subscribe/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public boolean subscribeUser(@PathVariable String UserId) {
-        userService.subscribeUser(UserId);
+    public boolean subscribeUser(@PathVariable String userId) {
+        userService.subscribeUser(userId);
         return true;
     }
 
-    @PostMapping("/unsubscribe/{userId}")
+    @PostMapping("unSubscribe/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public boolean unSubscribeUser(@PathVariable String UserId) {
-        userService.unSubscribeUser(UserId);
+    public boolean unSubscribeUser(@PathVariable String userId) {
+        userService.unSubscribeUser(userId);
         return true;
     }
 
-    @GetMapping("/{userId}/history}")
+    @GetMapping("/{userId}/history")
     @ResponseStatus(HttpStatus.OK)
     public Set<String> userHistory(@PathVariable String UserId) {
        return userService.userHistory(UserId);

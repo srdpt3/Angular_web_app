@@ -12,38 +12,23 @@ export class VideoService {
   constructor(private httpClient: HttpClient) {
   }
 
-  // @ts-ignore
-  public uploadVideo(fileEntry: FileSystemFileEntry): Observable<UploadVideoResponse> {
+  uploadVideo(fileEntry: File): Observable<UploadVideoResponse> {
+    const formData = new FormData()
+    formData.append('file', fileEntry, fileEntry.name);
 
-    const formData = new FormData();
-    // @ts-ignore
-    formData.append('file', fileEntry, fileEntry.name)
-    return this.httpClient.post<UploadVideoResponse>('http://localhost:8080/api/video/upload', formData);
-    // return fileEntry.file((file => {
-    //
-    //   return this.httpClient.post<UploadVideoResponse>('http://localhost:8080/api/video/upload', fd,
-    //     {
-    //       headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token'))
-    //     });
-    // }))
+    // HTTP Post call to upload the video
+    return this.httpClient.post<UploadVideoResponse>("http://localhost:8080/api/video", formData);
   }
 
-  public uploadThumbnail(fileEntry: File, videoId: string): Observable<string> {
-
-    const formData = new FormData();
-    // @ts-ignore
-    formData.append('file', fileEntry, fileEntry.name)
+  uploadThumbnail(fileEntry: File, videoId: string): Observable<string> {
+    const formData = new FormData()
+    formData.append('file', fileEntry, fileEntry.name);
     formData.append('videoId', videoId);
-    return this.httpClient.post('http://localhost:8080/api/video/thumbnail', formData, {
+
+    // HTTP Post call to upload the thumbnail
+    return this.httpClient.post("http://localhost:8080/api/video/thumbnail", formData, {
       responseType: 'text'
     });
-    // return fileEntry.file((file => {
-    //
-    //   return this.httpClient.post<UploadVideoResponse>('http://localhost:8080/api/video/upload', fd,
-    //     {
-    //       headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token'))
-    //     });
-    // }))
   }
 
 
@@ -61,4 +46,13 @@ export class VideoService {
     return this.httpClient.get<Array<VideoDto>>("http://localhost:8080/api/video/");
   }
 
+  likeVideo(videoId: string) : Observable<VideoDto> {
+    return this.httpClient.post<VideoDto>("http://localhost:8080/api/video/" + videoId+"/like",  null);
+
+  }
+
+  disLikeVideo(videoId: string) : Observable<VideoDto>{
+    return this.httpClient.post<VideoDto>("http://localhost:8080/api/video/" + videoId+"/disLike",  null);
+
+  }
 }

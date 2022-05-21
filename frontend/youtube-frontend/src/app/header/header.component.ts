@@ -8,29 +8,25 @@ import {OidcSecurityService} from "angular-auth-oidc-client";
 })
 export class HeaderComponent implements OnInit {
 
-  isUserLoggedIn : boolean = false
+
+  isAuthenticated: boolean = false;
 
   constructor(private oidcSecurityService: OidcSecurityService) {
-    // oidcSecurityService.isUserLoggedIn.subscribe(value => {
-    //   this.isUserLoggedIn = value;
-    // });
-    // this.isUserLoggedIn = oidcSecurityService.isLoggedIn();
   }
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(({isAuthenticated}) => {
-        this.isUserLoggedIn = isAuthenticated;
+      this.isAuthenticated = isAuthenticated;
     })
   }
 
   login() {
     this.oidcSecurityService.authorize();
-
   }
 
-  logout() {
+  logOff() {
     this.oidcSecurityService.logoffAndRevokeTokens();
-
+    this.oidcSecurityService.logoffLocal();
   }
 
 
